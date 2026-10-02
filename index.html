@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#260713">
+<meta name="description" content="A little interactive Boyfriend’s Day surprise made with love.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<title>For My Boyfriend ❤️</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;500;600;700&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Poppins,sans-serif;background:#16040d;color:#fff;overflow:hidden;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}
+.app{height:100vh;position:relative}
+.slide{position:absolute;inset:0;display:none;align-items:center;justify-content:center;padding:28px;overflow:auto;background:radial-gradient(circle at top,#64142d 0,#260713 48%,#100208 100%)}
+.slide.active{display:flex;animation:fade .55s ease}
+@keyframes fade{from{opacity:0;transform:scale(.98)}to{opacity:1;transform:scale(1)}}
+.card{width:min(920px,96vw);max-height:92vh;overflow:auto;text-align:center;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(14px);border-radius:30px;padding:38px;box-shadow:0 20px 70px rgba(0,0,0,.35)}
+h1{font-family:"Great Vibes",cursive;font-size:clamp(3rem,8vw,6.5rem);font-weight:400;color:#ffd9e5}
+h2{font-family:"Great Vibes",cursive;font-size:clamp(2.5rem,6vw,4.5rem);font-weight:400;color:#ffd9e5;margin-bottom:12px}
+h3{margin-bottom:10px}.sub{opacity:.85;margin:12px auto 24px;max-width:650px;line-height:1.7}
+button{border:0;border-radius:999px;padding:13px 24px;background:#ff477e;color:white;font:600 15px Poppins;cursor:pointer;transition:.2s}
+button:hover{transform:translateY(-2px);filter:brightness(1.08)}
+input{width:min(340px,90%);padding:14px 18px;border-radius:999px;border:1px solid #ffffff44;background:#fff;color:#32101c;font:500 15px Poppins;outline:none}
+.error{color:#ffb0c4;margin-top:12px;min-height:24px}
+.hearts{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.heart{position:absolute;bottom:-40px;animation:float linear infinite;opacity:.5}
+@keyframes float{to{transform:translateY(-115vh) rotate(360deg);opacity:0}}
+.photo-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin:20px 0}
+.photo{height:190px;border-radius:18px;overflow:hidden;background:#ffffff15;border:1px solid #ffffff25;display:flex;align-items:center;justify-content:center}
+.photo img{width:100%;height:100%;object-fit:cover}
+.photo span{opacity:.65;padding:10px}
+.nav{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:20;display:flex;gap:10px;background:#12030a99;padding:8px;border-radius:999px;backdrop-filter:blur(8px)}
+.nav button{padding:9px 15px;font-size:13px}
+.counter{position:fixed;top:15px;right:18px;z-index:20;background:#12030acc;padding:8px 14px;border-radius:999px;font-size:12px}
+.quiz{text-align:left;max-width:700px;margin:auto}
+.q{padding:17px;border-radius:18px;background:#ffffff0d;margin:12px 0}
+.option{display:block;margin:7px 0;padding:10px 13px;border-radius:12px;background:#ffffff0d;cursor:pointer}
+.option input{width:auto;margin-right:8px}
+.result{margin-top:15px;font-weight:600;color:#ffd1df}
+.gift-area{display:flex;justify-content:center;margin:30px 0}
+.gift{width:170px;height:135px;position:relative;cursor:pointer;transition:.25s}
+.gift:hover{transform:scale(1.05)}
+.box{position:absolute;left:10px;right:10px;bottom:0;height:105px;background:#ff477e;border-radius:8px}
+.lid{position:absolute;left:0;right:0;top:8px;height:35px;background:#ff6b98;border-radius:8px;z-index:3;transition:.6s}
+.ribbon-v{position:absolute;left:67px;top:0;width:35px;height:135px;background:#ffd0df;z-index:4}
+.ribbon-h{position:absolute;left:0;right:0;top:12px;height:24px;background:#ffd0df;z-index:5}
+.gift.open .lid{transform:translateY(-85px) rotate(-8deg)}
+.gift.open .box{animation:pop .5s}
+@keyframes pop{50%{transform:translateY(5px)}}
+.reveal{display:none;margin:20px auto 0;max-width:620px;padding:22px;border-radius:20px;background:#fff;color:#3a0b1b;animation:fade .5s}
+.gift.open + .reveal{display:block}
+.final{font-size:18px;line-height:1.9}
+.small{font-size:12px;opacity:.65;margin-top:15px}
+@media(max-width:600px){.card{padding:25px 18px}.slide{padding:15px}.photo{height:150px}}
+
+.admin-btn{position:fixed;top:15px;left:18px;z-index:30;background:#ffffff12;border:1px solid #ffffff22;color:#fff;padding:7px 12px;border-radius:999px;font-size:11px}
+.admin-panel{display:none;position:fixed;inset:0;z-index:50;background:#16040df2;overflow:auto;padding:25px}
+.admin-box{width:min(850px,95vw);margin:auto;background:#fff;color:#32101c;border-radius:24px;padding:25px}
+.admin-box input,.admin-box textarea{width:100%;margin:7px 0 14px;border:1px solid #ddd;border-radius:12px;padding:11px;font:14px Poppins}
+.admin-box textarea{min-height:90px}
+.admin-close{float:right;background:#32101c;padding:7px 12px}
+
+</head>
+<body>
+<div class="app">
+<button class="admin-btn" onclick="adminLogin()">Admin</button>
+
+<div class="admin-panel" id="adminPanel">
+ <div class="admin-box">
+  <button class="admin-close" onclick="closeAdmin()">Close</button>
+  <h2 style="color:#7d1735">Admin Edit</h2>
+  <p>Only you should use this area. Changes are saved in this browser.</p>
+  <label>Slide 2 title</label><input id="editTitle2">
+  <label>Slide 2 message</label><textarea id="editMsg2"></textarea>
+  <label>Slide 5 message</label><textarea id="editMsg5"></textarea>
+  <label>Slide 6 things you love (one per line)</label><textarea id="editLove6"></textarea>
+  <label>Slide 9 promises (one per line)</label><textarea id="editPromise9"></textarea>
+  <label>Gift reveal message</label><textarea id="editGift"></textarea>
+  <br><button onclick="saveEdits()">Save Changes ❤️</button>
+  <button onclick="resetEdits()">Reset</button>
+  <p class="small">Admin password is set in the code as ADMIN123. Change it before publishing.</p>
+ </div>
+</div>
+<div class="hearts" id="hearts"></div>
+<div class="counter" id="counter">1 / 10</div>
+
+<section class="slide active" id="s1">
+<div class="card">
+<div style="font-size:54px">🔐❤️</div>
+<h1>Only for you</h1>
+<p class="sub">A little secret world made especially for the person who means the most to me.</p>
+<input id="password" type="password" placeholder="Enter our secret password">
+<br><br><button onclick="unlock()">Open my heart →</button>
+<div class="error" id="error"></div>
+<p class="small">Hint: use the special word/date only we know.</p>
+</div>
+</section>
+
+<section class="slide" id="s2"><div class="card">
+<div style="font-size:50px">💗</div><h2 id="title2">Happy Boyfriend's Day</h2>
+<p class="sub" id="msg2">To my favourite person, my safe place, my biggest smile — this little website is just for you.</p>
+<button onclick="go(3)">There's more →</button>
+</div></section>
+
+<section class="slide" id="s3"><div class="card">
+<h2>Our Little Relationship Quiz</h2>
+<p class="sub">No pressure 😌 Just answer what feels right. This one is for fun!</p>
+<div class="quiz">
+<div class="q"><b>1. Who fell first?</b><label class="option"><input type="radio" name="q1" value="me"> Me</label><label class="option"><input type="radio" name="q1" value="you"> You</label></div>
+<div class="q"><b>2. Who gets jealous more?</b><label class="option"><input type="radio" name="q2" value="me"> Me 😭</label><label class="option"><input type="radio" name="q2" value="you"> You 👀</label></div>
+<div class="q"><b>3. Who says sorry first?</b><label class="option"><input type="radio" name="q3" value="me"> Me</label><label class="option"><input type="radio" name="q3" value="you"> You</label></div>
+<div class="q"><b>4. Who is more obsessed?</b><label class="option"><input type="radio" name="q4" value="me"> Me</label><label class="option"><input type="radio" name="q4" value="you"> You</label></div>
+<button onclick="quizResult()">See my verdict 💌</button>
+<div class="result" id="quizResult"></div>
+</div></div></section>
+
+<section class="slide" id="s4"><div class="card">
+<h2>Our Memories 📸</h2><p class="sub">Replace these boxes with our favourite pictures.</p>
+<div class="photo-grid">
+<div class="photo"><span>📷 Our first photo</span></div><div class="photo"><span>📷 Favourite memory</span></div><div class="photo"><span>📷 A silly moment</span></div><div class="photo"><span>📷 Us ❤️</span></div>
+</div></div></section>
+
+<section class="slide" id="s5"><div class="card">
+<h2>A Message For You 💌</h2>
+<p class="final" id="msg5">You came into my life and somehow made ordinary moments feel special. Thank you for every laugh, every conversation, every little effort and every memory we've made. I hope you always know how deeply you are appreciated. This isn't just a website — it's a tiny piece of my heart made just for you. ❤️</p>
+</div></section>
+
+<section class="slide" id="s6"><div class="card">
+<h2>Things I Love About You 🫶</h2>
+<div class="photo-grid">
+<div id="loveList">
+<div class="q">Your smile 😊</div><div class="q">The way you care</div><div class="q">Your stupid jokes 😂</div><div class="q">How you make me feel safe</div><div class="q">Our random conversations</div><div class="q">Simply… you ❤️</div>
+</div>
+</div></div></section>
+
+<section class="slide" id="s7"><div class="card">
+<h2>Our Story ✨</h2>
+<div class="q"><b>Then</b><br>Two people who didn't know how important they would become to each other.</div>
+<div class="q"><b>Somewhere along the way</b><br>More conversations. More memories. More reasons to smile.</div>
+<div class="q"><b>Now</b><br>A person I never want to stop making memories with. ❤️</div>
+</div></section>
+
+<section class="slide" id="s8"><div class="card">
+<h2>Your Gift 🎁</h2><p class="sub">Double-click the gift box…</p>
+<div class="gift-area">
+<div class="gift" id="gift" ondblclick="openGift()">
+<div class="lid"></div><div class="ribbon-v"></div><div class="ribbon-h"></div><div class="box"></div>
+</div>
+<div class="reveal" id="reveal"><h3>🎉 Surprise!</h3><p id="giftMsg">My gift to you is a promise to keep choosing you, keep laughing with you, and keep making beautiful memories together. ❤️</p><br><b>And yes… there is a real gift coming too 😉</b></div>
+</div>
+</div></section>
+
+<section class="slide" id="s9"><div class="card">
+<h2>My Little Promises 🤞</h2>
+<div class="q">I promise to listen when you need me.</div>
+<div class="q">I promise to celebrate your wins.</div>
+<div class="q">I promise to make more silly memories with you.</div>
+<div class="q">I promise to never take the little things for granted.</div>
+<div class="q">And most importantly… I'll always appreciate having you in my life. ❤️</div>
+</div></section>
+
+<section class="slide" id="s10"><div class="card">
+<div style="font-size:55px">💋❤️✨</div>
+<h1>Happy Boyfriend's Day</h1>
+<p class="final">If you reached the end, just know that every slide was made with love.</p>
+<p class="final"><b>You are one of my favourite parts of my life. ❤️</b></p>
+<p class="small">Now come here and collect your real-life hug. 🫶</p>
+</div></section>
+
+<div class="nav">
+<button onclick="prev()">←</button><button onclick="next()">Next →</button>
+</div>
+</div>
+
+<script>
+const PASSWORD="LOVE123"; // CHANGE THIS
+let current=1, unlocked=false;
+function go(n){
+ if(n>1 && !unlocked){return}
+ current=Math.max(1,Math.min(10,n));
+ document.querySelectorAll('.slide').forEach(x=>x.classList.remove('active'));
+ document.getElementById('s'+current).classList.add('active');
+ document.getElementById('counter').textContent=current+" / 10";
+}
+function unlock(){
+ const p=document.getElementById('password').value;
+ if(p===PASSWORD){unlocked=true;document.getElementById('error').textContent="Unlocked ❤️";go(2)}
+ else document.getElementById('error').textContent="Hmm… that's not our secret password 😭";
+}
+function next(){if(current<10)go(current+1)}
+function prev(){if(current>1)go(current-1)}
+document.addEventListener('keydown',e=>{if(e.key==="ArrowRight")next();if(e.key==="ArrowLeft")prev()});
+function quizResult(){
+ let answered=0;
+ for(let i=1;i<=4;i++) if(document.querySelector('input[name=q'+i+']:checked')) answered++;
+ const r=document.getElementById('quizResult');
+ r.textContent=answered<4 ? "Answer all 4 first 😌❤️" : "Official result: We are ridiculously cute together. 10/10. 💗";
+}
+function openGift(){
+ const g=document.getElementById('gift');
+ g.classList.add('open');
+ document.getElementById('reveal').style.display='block';
+}
+for(let i=0;i<22;i++){
+ const h=document.createElement('div');h.className='heart';h.textContent=['♥','♡','❤','💗'][i%4];
+ h.style.left=Math.random()*100+'%';h.style.animationDuration=(7+Math.random()*9)+'s';h.style.animationDelay=(Math.random()*8)+'s';h.style.fontSize=(15+Math.random()*25)+'px';
+ document.getElementById('hearts').appendChild(h);
+}
+
+const ADMIN_PASSWORD="ADMIN123";
+function adminLogin(){
+ const p=prompt("Admin password:");
+ if(p===ADMIN_PASSWORD){loadEdits();document.getElementById("adminPanel").style.display="block";}
+ else if(p!==null) alert("Access denied.");
+}
+function closeAdmin(){document.getElementById("adminPanel").style.display="none";}
+function loadEdits(){
+ editTitle2.value=localStorage.getItem("title2")||title2.textContent;
+ editMsg2.value=localStorage.getItem("msg2")||msg2.textContent;
+ editMsg5.value=localStorage.getItem("msg5")||msg5.textContent;
+ editLove6.value=localStorage.getItem("love6")||[...document.querySelectorAll("#loveList .q")].map(x=>x.textContent).join("\n");
+ editPromise9.value=localStorage.getItem("promise9")||[...document.querySelectorAll("#promiseList .q")].map(x=>x.textContent).join("\n");
+ editGift.value=localStorage.getItem("gift")||giftMsg.textContent;
+}
+function saveEdits(){
+ const vals={title2:editTitle2.value,msg2:editMsg2.value,msg5:editMsg5.value,love6:editLove6.value,promise9:editPromise9.value,gift:editGift.value};
+ Object.entries(vals).forEach(([k,v])=>localStorage.setItem(k,v));
+ applyEdits(); alert("Saved ❤️");
+}
+function applyEdits(){
+ title2.textContent=localStorage.getItem("title2")||title2.textContent;
+ msg2.textContent=localStorage.getItem("msg2")||msg2.textContent;
+ msg5.textContent=localStorage.getItem("msg5")||msg5.textContent;
+ giftMsg.textContent=localStorage.getItem("gift")||giftMsg.textContent;
+ if(localStorage.getItem("love6")) loveList.innerHTML=localStorage.getItem("love6").split("\n").map(x=>'<div class="q">'+x+'</div>').join("");
+ if(localStorage.getItem("promise9")) promiseList.innerHTML=localStorage.getItem("promise9").split("\n").map(x=>'<div class="q">'+x+'</div>').join("");
+}
+function resetEdits(){["title2","msg2","msg5","love6","promise9","gift"].forEach(k=>localStorage.removeItem(k));location.reload();}
+applyEdits();
+</script>
+<script>if ("serviceWorker" in navigator) { window.addEventListener("load", () => navigator.serviceWorker.register("./service-worker.js").catch(() => {})); }</script>
+</body>
+</html>
